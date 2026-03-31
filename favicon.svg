@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <circle cx="16" cy="16" r="15" fill="#0C1A2E"/>
+  <circle cx="16" cy="16" r="14" fill="none" stroke="#F0EDE6" stroke-width="0.6"/>
+  <!-- Left hammer -->
+  <g transform="translate(16,14) rotate(-35)">
+    <rect x="-1.5" y="-8" width="3" height="12" rx="0.8" fill="#F0EDE6"/>
+    <rect x="-4" y="-10" width="8" height="4" rx="1" fill="#F0EDE6"/>
+  </g>
+  <!-- Right chisel -->
+  <g transform="translate(16,14) rotate(35)">
+    <rect x="-1.5" y="-8" width="3" height="12" rx="0.8" fill="#F0EDE6"/>
+    <rect x="-4" y="-10" width="8" height="4" rx="1" fill="#F0EDE6"/>
+  </g>
+  <!-- T -->
+  <text x="16" y="26" font-family="sans-serif" font-weight="900" font-size="6" fill="#F0EDE6" text-anchor="middle">T</text>
+</svg>
