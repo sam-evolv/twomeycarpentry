@@ -164,7 +164,7 @@
     }
     .nav-cta:hover { background: var(--oak-light); }
 
-    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; flex-shrink: 0; background: none; border: none; padding: 8px; }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; flex-shrink: 0; background: none; border: none; padding: 8px; position: relative; z-index: 201; }
     .hamburger span { width: 22px; height: 1.5px; background: var(--off-white); display: block; transition: all 0.3s; }
 
     /* ── HERO ────────────────────────────────── */
@@ -685,15 +685,6 @@
       transition: color 0.2s;
     }
     .mob-menu a:hover { color: var(--muted); }
-    .mob-close {
-      position: absolute; top: 1.5rem; right: clamp(1.5rem, 5vw, 5rem);
-      background: none; border: none; cursor: pointer;
-      font-size: 1.5rem; font-weight: 300; line-height: 1;
-      color: var(--off-white);
-      width: 44px; height: 44px;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 201;
-    }
 
     /* ── MOB STICKY CALL — REMOVED ─────────── */
     .mob-call { display: none !important; }
@@ -897,7 +888,6 @@
 
       /* Mob menu adjustments */
       .mob-menu a { font-size: clamp(2rem, 8vw, 2.5rem); padding: 0.6rem 0; }
-      .mob-close { top: 1.2rem; }
     }
 
     /* ── 360px — VERY SMALL PHONES ──────────── */
@@ -1410,7 +1400,6 @@
 
 <!-- MOB MENU -->
 <div class="mob-menu" id="mobMenu">
-  <button type="button" class="mob-close" id="mobClose" aria-label="Close menu">✕</button>
   <a href="#about" class="mob-link">About</a>
   <a href="#services" class="mob-link">Services</a>
   <a href="#projects" class="mob-link">Work</a>
@@ -1937,13 +1926,10 @@
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => nav.classList.toggle('stuck', scrollY > 60), { passive: true });
 
-  // Mobile menu
+  // Mobile menu — hamburger toggles open/close
   const mobMenu = document.getElementById('mobMenu');
   const hamBtn = document.getElementById('ham');
-  const mobCloseBtn = document.getElementById('mobClose');
-  hamBtn.addEventListener('click', function(e) { e.stopPropagation(); mobMenu.classList.add('open'); });
-  mobCloseBtn.addEventListener('click', function(e) { e.stopPropagation(); mobMenu.classList.remove('open'); });
-  mobCloseBtn.addEventListener('touchend', function(e) { e.preventDefault(); e.stopPropagation(); mobMenu.classList.remove('open'); });
+  hamBtn.addEventListener('click', function() { mobMenu.classList.toggle('open'); });
   document.querySelectorAll('.mob-link').forEach(function(l) { l.addEventListener('click', function() { mobMenu.classList.remove('open'); }); });
 
   // Hero reveal
