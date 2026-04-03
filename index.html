@@ -16,8 +16,10 @@
   <meta name="twitter:title" content="Twomey Carpentry & Joinery — Bespoke Carpentry Cork" />
   <meta name="twitter:description" content="Bespoke carpentry and joinery for homes and businesses across Cork." />
   <meta name="twitter:image" content="/images/og-image.jpg" />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -686,20 +688,15 @@
     .mob-close {
       position: absolute; top: 1.5rem; right: clamp(1.5rem, 5vw, 5rem);
       background: none; border: none; cursor: pointer;
-      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase;
-      color: var(--muted);
+      font-size: 1.5rem; font-weight: 300; line-height: 1;
+      color: var(--off-white);
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 201;
     }
 
-    /* ── MOB STICKY CALL ─────────────────────── */
-    .mob-call {
-      display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 150;
-      background: var(--off-white); color: var(--navy);
-      font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 900;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 1rem; align-items: center; justify-content: center; gap: 0.6rem;
-      box-shadow: 0 -2px 20px rgba(0,0,0,0.3);
-    }
-    .mob-call svg { width: 17px; height: 17px; stroke: var(--navy); fill: none; stroke-width: 2; }
+    /* ── MOB STICKY CALL — REMOVED ─────────── */
+    .mob-call { display: none !important; }
 
     /* ── RESPONSIVE ──────────────────────────── */
     @media (max-width: 1024px) {
@@ -733,8 +730,7 @@
       .gi { height: 240px; }
       .gi:nth-child(1) { grid-column: span 1; grid-row: span 1; }
       .cta-right { flex-direction: column; }
-      .mob-call { display: flex; }
-      body { padding-bottom: 60px; }
+      body { padding-bottom: 0; }
 
       /* Hero adjustments for tablet/mobile */
       .hero h1 { font-size: clamp(3.2rem, 11vw, 4.5rem); }
@@ -761,8 +757,8 @@
       /* FAQ */
       .faq-q { font-size: 1.1rem; }
 
-      /* Back to top above mob-call */
-      #backToTop { bottom: 72px !important; }
+      /* Back to top */
+      #backToTop { bottom: 24px !important; }
 
       /* Project cards for touch */
       .proj-card { width: clamp(280px, 75vw, 400px); }
@@ -924,8 +920,9 @@
       .gi-title, .gi-sub { transform: none; }
       .gi-bg { filter: brightness(0.7) saturate(0.75); }
 
-      /* Show service link on touch */
+      /* Show service preview images and link on touch */
       .svc-link { opacity: 1; transform: none; color: var(--oak); }
+      .svc-preview { opacity: 1; filter: brightness(0.18) saturate(0.5); }
 
       /* Disable hover transforms that feel janky on touch */
       .svc-card:hover { transform: none; }
@@ -979,7 +976,7 @@
       background:
         linear-gradient(to right, rgba(12,26,46,0.88) 0%, rgba(12,26,46,0.55) 45%, rgba(12,26,46,0.2) 100%),
         linear-gradient(to top, rgba(12,26,46,0.75) 0%, transparent 50%),
-        linear-gradient(to bottom, rgba(12,26,46,0.4) 0%, transparent 30%);
+        linear-gradient(to bottom, rgba(12,26,46,0.18) 0%, transparent 20%);
       z-index: 1;
     }
     /* Slide indicator dots */
@@ -1259,10 +1256,7 @@
 
     /* Safe area insets for notched phones */
     @supports (padding: env(safe-area-inset-bottom)) {
-      @media (max-width: 768px) {
-        .mob-call { padding-bottom: calc(1rem + env(safe-area-inset-bottom)); }
-        body { padding-bottom: calc(60px + env(safe-area-inset-bottom)); }
-      }
+      .footer-new { padding-bottom: env(safe-area-inset-bottom); }
     }
 
     /* Prevent horizontal scroll from any element */
@@ -1280,8 +1274,8 @@
       /* Better hero text wrapping */
       .hero h1 { word-break: break-word; hyphens: auto; }
 
-      /* Service card preview visible on active for touch */
-      .svc-card:active .svc-preview { opacity: 1; }
+      /* Service card preview always visible on mobile */
+      .svc-preview { opacity: 1; filter: brightness(0.18) saturate(0.5); }
 
       /* Wider project track fade for mobile */
       .projects-track-wrap::after { width: 4rem; }
@@ -1416,7 +1410,7 @@
 
 <!-- MOB MENU -->
 <div class="mob-menu" id="mobMenu">
-  <button type="button" class="mob-close" id="mobClose" aria-label="Close menu">Close ✕</button>
+  <button type="button" class="mob-close" id="mobClose" aria-label="Close menu">✕</button>
   <a href="#about" class="mob-link">About</a>
   <a href="#services" class="mob-link">Services</a>
   <a href="#projects" class="mob-link">Work</a>
@@ -1571,11 +1565,11 @@
       <a href="https://www.instagram.com/twomeycarpentryandjoinery/" target="_blank" rel="noopener" class="btn btn-ghost r d1">Instagram →</a>
     </div>
     <div class="gallery-grid">
-      <div class="gi r"><div class="gi-bg" style="background-image:url('images/kitchen-cottage-wide.jpg')"><div class="gi-cap"><div class="gi-title">Cottage Kitchen</div><div class="gi-sub">Co. Cork</div></div></div></div>
-      <div class="gi r d1"><div class="gi-bg" style="background-image:url('images/wardrobe-builtin.jpg')"><div class="gi-cap"><div class="gi-title">Floor-to-Ceiling Wardrobes</div><div class="gi-sub">Co. Cork</div></div></div></div>
-      <div class="gi r d2"><div class="gi-bg" style="background-image:url('images/media-wall-dark.jpg')"><div class="gi-cap"><div class="gi-title">Media Wall &amp; Fireplace</div><div class="gi-sub">Co. Cork</div></div></div></div>
-      <div class="gi r d1"><div class="gi-bg" style="background-image:url('images/mudroom-bootroom.jpg')"><div class="gi-cap"><div class="gi-title">Bespoke Mudroom</div><div class="gi-sub">Co. Cork</div></div></div></div>
-      <div class="gi r d2"><div class="gi-bg" style="background-image:url('images/kitchen-island-grey.jpg')"><div class="gi-cap"><div class="gi-title">Shaker Kitchen &amp; Island</div><div class="gi-sub">Co. Cork</div></div></div></div>
+      <div class="gi r"><div class="gi-bg" style="background-image:url('images/kitchen-cottage-wide.jpg')"><div class="gi-cap"><div class="gi-title">Cottage Kitchen</div></div></div></div>
+      <div class="gi r d1"><div class="gi-bg" style="background-image:url('images/wardrobe-builtin.jpg')"><div class="gi-cap"><div class="gi-title">Floor-to-Ceiling Wardrobes</div></div></div></div>
+      <div class="gi r d2"><div class="gi-bg" style="background-image:url('images/media-wall-dark.jpg')"><div class="gi-cap"><div class="gi-title">Media Wall &amp; Fireplace</div></div></div></div>
+      <div class="gi r d1"><div class="gi-bg" style="background-image:url('images/mudroom-bootroom.jpg')"><div class="gi-cap"><div class="gi-title">Bespoke Mudroom</div></div></div></div>
+      <div class="gi r d2"><div class="gi-bg" style="background-image:url('images/kitchen-island-grey.jpg')"><div class="gi-cap"><div class="gi-title">Shaker Kitchen &amp; Island</div></div></div></div>
     </div>
   </div>
 </section>
@@ -1603,8 +1597,7 @@
         <div class="proj-info">
           <span class="proj-cat">Fitted Kitchen</span>
           <span class="proj-name">Shaker Kitchen &amp; Island</span>
-          <span class="proj-loc">Co. Cork</span>
-        </div>
+                  </div>
       </div>
 
       <div class="proj-card">
@@ -1613,8 +1606,7 @@
         <div class="proj-info">
           <span class="proj-cat">Media &amp; Shelving</span>
           <span class="proj-name">Media Wall &amp; Fireplace</span>
-          <span class="proj-loc">Co. Cork</span>
-        </div>
+                  </div>
       </div>
 
       <div class="proj-card">
@@ -1623,8 +1615,7 @@
         <div class="proj-info">
           <span class="proj-cat">Fitted Kitchen</span>
           <span class="proj-name">Cottage Kitchen</span>
-          <span class="proj-loc">Co. Cork</span>
-        </div>
+                  </div>
       </div>
 
       <div class="proj-card">
@@ -1633,8 +1624,7 @@
         <div class="proj-info">
           <span class="proj-cat">Bespoke Furniture</span>
           <span class="proj-name">Bathroom Vanity Unit</span>
-          <span class="proj-loc">Co. Cork</span>
-        </div>
+                  </div>
       </div>
 
       <div class="proj-card">
@@ -1643,8 +1633,7 @@
         <div class="proj-info">
           <span class="proj-cat">Feature Wall</span>
           <span class="proj-name">Slat Wall &amp; Herringbone Floor</span>
-          <span class="proj-loc">Co. Cork</span>
-        </div>
+                  </div>
       </div>
 
     </div>
@@ -1707,17 +1696,17 @@
       <div class="t-card r">
         <div class="t-stars"><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg></div>
         <p class="t-q">"The kitchen Twomey built for us is unreal. Completely transformed the space. Quality of the finish is way beyond what I expected — everything fits perfectly."</p>
-        <div class="t-author"><div class="t-av">SM</div><div><div class="t-name">Siobhán Murphy</div><div class="t-loc">Co. Cork</div></div></div>
+        <div class="t-author"><div class="t-av">SM</div><div><div class="t-name">Siobhán Murphy</div></div></div>
       </div>
       <div class="t-card r d1">
         <div class="t-stars"><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg></div>
         <p class="t-q">"Got wardrobes and a TV unit done — both are class. Showed up on time, worked clean, and the finish is perfect. Already recommended Twomey to a few friends."</p>
-        <div class="t-author"><div class="t-av">PC</div><div><div class="t-name">Patrick Collins</div><div class="t-loc">Co. Cork</div></div></div>
+        <div class="t-author"><div class="t-av">PC</div><div><div class="t-name">Patrick Collins</div></div></div>
       </div>
       <div class="t-card r d2">
         <div class="t-stars"><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg><svg class="t-star" viewBox="0 0 14 14"><polygon points="7,1 8.8,5.3 13.5,5.7 10,8.8 11.1,13.5 7,11 2.9,13.5 4,8.8 0.5,5.7 5.2,5.3"/></svg></div>
         <p class="t-q">"Our bathroom renovation turned out incredible. The vanity unit and tiling are stunning — the standard of work is something else. Absolutely delighted."</p>
-        <div class="t-author"><div class="t-av">AO</div><div><div class="t-name">Aoife O'Sullivan</div><div class="t-loc">Co. Cork</div></div></div>
+        <div class="t-author"><div class="t-av">AO</div><div><div class="t-name">Aoife O'Sullivan</div></div></div>
       </div>
     </div>
   </div>
@@ -1949,9 +1938,13 @@
   window.addEventListener('scroll', () => nav.classList.toggle('stuck', scrollY > 60), { passive: true });
 
   // Mobile menu
-  document.getElementById('ham').addEventListener('click', () => document.getElementById('mobMenu').classList.add('open'));
-  document.getElementById('mobClose').addEventListener('click', () => document.getElementById('mobMenu').classList.remove('open'));
-  document.querySelectorAll('.mob-link').forEach(l => l.addEventListener('click', () => document.getElementById('mobMenu').classList.remove('open')));
+  const mobMenu = document.getElementById('mobMenu');
+  const hamBtn = document.getElementById('ham');
+  const mobCloseBtn = document.getElementById('mobClose');
+  hamBtn.addEventListener('click', function(e) { e.stopPropagation(); mobMenu.classList.add('open'); });
+  mobCloseBtn.addEventListener('click', function(e) { e.stopPropagation(); mobMenu.classList.remove('open'); });
+  mobCloseBtn.addEventListener('touchend', function(e) { e.preventDefault(); e.stopPropagation(); mobMenu.classList.remove('open'); });
+  document.querySelectorAll('.mob-link').forEach(function(l) { l.addEventListener('click', function() { mobMenu.classList.remove('open'); }); });
 
   // Hero reveal
   setTimeout(() => document.querySelectorAll('.hero .r').forEach(el => el.classList.add('on')), 100);
