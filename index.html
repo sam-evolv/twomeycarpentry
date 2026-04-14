@@ -1832,7 +1832,8 @@
           <div class="c-item"><div class="c-ico"><svg viewBox="0 0 16 16"><path d="M8 1a5 5 0 1 0 0 10A5 5 0 0 0 8 1zM2 8a6 6 0 1 1 12 0A6 6 0 0 1 2 8z"/><path d="M8 4v4l3 1.5"/></svg></div><div><div class="c-lbl">Hours</div><div class="c-val">Mon–Sat, 8am–5pm</div></div></div>
         </div>
       </div>
-      <form class="cform r d1" id="contact-form" onsubmit="handleSubmit(event)">
+      <form class="cform r d1" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
+        <input type="hidden" name="form-name" value="contact" />
         <p class="visually-hidden" style="display:none"><label>Don't fill this out: <input name="bot-field" /></label></p>
         <div class="frow">
           <div class="fg"><label for="fn">First Name</label><input type="text" id="fn" name="first-name" placeholder="John" required /></div>
@@ -2009,8 +2010,8 @@
 
     const formData = new FormData(form);
 
-    // Submit to Netlify Function
-    fetch('/.netlify/functions/contact', {
+    // Submit to Netlify Forms
+    fetch('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams(formData).toString()
@@ -2020,9 +2021,7 @@
         okMsg.style.display = 'block';
         form.reset();
       } else {
-        return res.json().then(data => {
-          throw new Error(data.error || 'Form submission failed');
-        });
+        throw new Error('Form submission failed');
       }
     })
     .catch(function(err) {

@@ -1,24 +1,5 @@
 [build]
-  command = "echo 'Static site - no build required'"
   publish = "."
-  functions = "netlify/functions"
-
-# Environment variables - these MUST be set in Netlify dashboard
-# EMAIL_USER = twomeycarpentry1@gmail.com
-# EMAIL_PASSWORD = your_gmail_app_password (generate at myaccount.google.com/apppasswords)
-
-# Redirect all form submissions
-[[redirects]]
-  from = "/"
-  to = "/"
-  status = 200
-  force = false
-
-# Cache settings
-[[headers]]
-  for = "/*"
-  [headers.values]
-    Cache-Control = "public, max-age=3600"
 
 [[headers]]
   for = "/images/*"
