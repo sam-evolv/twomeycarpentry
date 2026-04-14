@@ -1832,10 +1832,7 @@
           <div class="c-item"><div class="c-ico"><svg viewBox="0 0 16 16"><path d="M8 1a5 5 0 1 0 0 10A5 5 0 0 0 8 1zM2 8a6 6 0 1 1 12 0A6 6 0 0 1 2 8z"/><path d="M8 4v4l3 1.5"/></svg></div><div><div class="c-lbl">Hours</div><div class="c-val">Mon–Sat, 8am–5pm</div></div></div>
         </div>
       </div>
-      <form class="cform r d1" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" onsubmit="handleSubmit(event)">
-        <input type="hidden" name="form-name" value="contact" />
-        <input type="hidden" name="_to" value="twomeycarpentry1@gmail.com" />
-        <input type="hidden" name="_subject" value="New Project Enquiry from {first-name} {last-name}" />
+      <form class="cform r d1" id="contact-form" onsubmit="handleSubmit(event)">
         <p class="visually-hidden" style="display:none"><label>Don't fill this out: <input name="bot-field" /></label></p>
         <div class="frow">
           <div class="fg"><label for="fn">First Name</label><input type="text" id="fn" name="first-name" placeholder="John" required /></div>
@@ -2012,56 +2009,30 @@
 
     const formData = new FormData(form);
 
-    // Submit to Netlify Forms endpoint
-    fetch('/', {
+    // Submit to Netlify Function
+    fetch('/.netlify/functions/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams(formData).toString()
     })
     .then(function(res) {
-      if (res.ok || res.status === 200) {
+      if (res.ok) {
         okMsg.style.display = 'block';
         form.reset();
-        // Also send to backup email service
-        sendEmailNotification(formData);
       } else {
-        errMsg.style.display = 'block';
-        console.error('Form submission error:', res.status);
+        return res.json().then(data => {
+          throw new Error(data.error || 'Form submission failed');
+        });
       }
     })
     .catch(function(err) {
-      console.error('Fetch error:', err);
+      console.error('Form submission error:', err);
       errMsg.style.display = 'block';
     })
     .finally(function() {
       btn.disabled = false;
       btn.innerHTML = 'Send Enquiry <svg viewBox="0 0 14 14"><path d="M2 7h10M8 3l4 4-4 4"/></svg>';
     });
-  }
-
-  // Send email notification via EmailJS (backup service)
-  function sendEmailNotification(formData) {
-    try {
-      const data = {
-        service_id: 'service_twomeycarpentry',
-        template_id: 'template_contact_form',
-        user_id: 'YOUR_EMAILJS_PUBLIC_KEY', // Will be set from Netlify env var
-        template_params: {
-          to_email: 'cian@twomeycarpentry.ie',
-          from_name: formData.get('first-name') + ' ' + formData.get('last-name'),
-          from_email: formData.get('email'),
-          phone: formData.get('phone') || 'Not provided',
-          service: formData.get('service'),
-          message: formData.get('message'),
-          reply_to: formData.get('email')
-        }
-      };
-
-      // This is a backup - forms will submit to Netlify which has email notifications configured
-      console.log('Form submitted to Netlify Forms - email notification queued');
-    } catch (err) {
-      console.log('Backup email service not configured (primary Netlify Forms will handle):', err);
-    }
   }
 
   // FAQ

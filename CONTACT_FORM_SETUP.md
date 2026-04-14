@@ -1,175 +1,131 @@
-# Contact Form Email Setup Guide
+# Contact Form Email Setup Guide - Netlify Functions
 
 ## Current Status
-✅ Contact form is configured and ready for email routing  
-✅ Netlify Forms integration is set up  
-⏳ Email notifications need to be configured in Netlify dashboard  
+✅ Contact form is configured and ready for email sending  
+✅ Netlify Function is set up to handle emails  
+⏳ Gmail credentials need to be added to Netlify environment variables  
 
-## What's Been Configured
+## How It Works Now
 
-### Form Fields
-The contact form collects:
-- First Name (required)
-- Last Name (required)
-- Email (required)
-- Phone (optional)
-- Service Selection (required dropdown)
-- Project Message (required textarea)
-
-### Email Recipients
-- **Primary:** twomeycarpentry1@gmail.com
-
-### Form Behavior
-1. User fills out the form and clicks "Send Enquiry"
-2. Form submits to Netlify Forms handler
-3. Email notification is sent to Cian's email
-4. User sees success message: "Thanks — we'll be in touch within 24 hours."
-5. User's email address is captured for follow-up
+The contact form submits directly to a Netlify Function (`/.netlify/functions/contact`) which:
+1. Receives the form data
+2. Sends an email to twomeycarpentry1@gmail.com with all the details
+3. Returns success/error response to the user
 
 ---
 
-## Netlify Dashboard Configuration (Required)
+## Setup Required: Add Gmail Credentials to Netlify
 
-To activate email notifications, you need to configure Netlify Forms notifications:
+### Step 1: Generate Gmail App Password
+Gmail requires an "App Password" for third-party apps to send emails.
 
-### Step 1: Open Netlify Dashboard
-1. Go to [netlify.com](https://netlify.com)
-2. Sign in to your account
-3. Select the Twomey Carpentry site
+1. Go to [myaccount.google.com](https://myaccount.google.com)
+2. Click **Security** in the left menu
+3. Enable **2-Step Verification** (if not already enabled)
+4. Scroll down and find **App passwords** (appears after 2FA is enabled)
+5. Select **Mail** and **Windows Computer** (or your device)
+6. Google will generate a 16-character password
+7. **Copy this password** (you'll need it in the next step)
 
-### Step 2: Configure Form Notifications
-1. Go to **Site settings → Forms → Form notifications**
-2. Click **Add notification → Email notification**
-3. Set up email recipients:
-   - Add: `twomeycarpentry1@gmail.com`
+### Step 2: Add Credentials to Netlify Dashboard
+1. Go to [netlify.com](https://netlify.com) and sign in
+2. Select your Twomey Carpentry site
+3. Go to **Site settings → Environment**
+4. Click **Add a variable**
+5. Add these two variables:
 
-### Step 3: Test the Form
+**Variable 1:**
+- Key: `EMAIL_USER`
+- Value: `twomeycarpentry1@gmail.com`
+
+**Variable 2:**
+- Key: `EMAIL_PASSWORD`
+- Value: `[paste the 16-character app password from Step 1]`
+
+6. Click **Save**
+
+### Step 3: Redeploy Site
+1. Go to **Deploys** in your Netlify dashboard
+2. Click **Trigger deploy → Deploy site**
+3. Wait for the build to complete
+4. Your contact form is now live!
+
+---
+
+## Testing the Form
+
 1. Go to [www.twomeycarpentryandjoinery.ie](https://www.twomeycarpentryandjoinery.ie)
-2. Scroll to "Let's Talk" contact section
-3. Fill out the form with test data
+2. Scroll to "Let's Talk" section
+3. Fill out the contact form with test data
 4. Click "Send Enquiry"
-5. Check Cian's email for the notification
+5. Check twomeycarpentry1@gmail.com inbox for the email
+
+**Expected behavior:**
+- Success message: "Thanks — we'll be in touch within 24 hours."
+- Email arrives within 10 seconds
+- Email contains all form data, nicely formatted
 
 ---
 
-## How It Works
+## Form Fields Captured
 
-### When a User Submits the Form:
-
-**User receives:**
-- Success message on the website
-- Email confirmation (if EmailJS is configured)
-
-**Cian receives:**
-- Email notification with form data:
-  - Visitor's name
-  - Visitor's email address
-  - Visitor's phone (if provided)
-  - Service they're interested in
-  - Detailed project description
-  - Link to reply directly
-
-**Fallback Behavior:**
-- If email fails, user still sees success message
-- Form data is stored in Netlify Dashboard under **Forms → Submissions**
-- Can access all submissions manually anytime
-
----
-
-## Optional: Add Automatic Confirmation Emails
-
-To send automatic confirmation emails to visitors, add EmailJS service:
-
-### EmailJS Setup (Free)
-1. Go to [emailjs.com](https://emailjs.com)
-2. Sign up for free account
-3. Create a Gmail service (or other email provider)
-4. Create an email template for contact form
-5. Get your **Public Key** and **Service ID**
-
-### Add to Netlify:
-1. Go to **Site settings → Environment variables**
-2. Add:
-   ```
-   EMAILJS_PUBLIC_KEY = your_public_key
-   EMAILJS_SERVICE_ID = your_service_id
-   ```
-
-3. Update form submission script to use EmailJS (code is ready in index.html)
-
----
-
-## Alternative: Using SendGrid (Professional)
-
-For higher volume, use SendGrid:
-
-1. Create free SendGrid account at [sendgrid.com](https://sendgrid.com)
-2. Get API key
-3. Store in Netlify environment variables
-4. Use Netlify Function to send emails (code provided in `netlify/functions/send-email.js`)
-
----
-
-## Testing Checklist
-
-- [ ] Contact form loads on the website
-- [ ] All form fields are visible and functional
-- [ ] Form validation works (required fields)
-- [ ] Submit button is clickable
-- [ ] Success message appears after submit
-- [ ] Email arrives in cian@twomeycarpentry.ie inbox
-- [ ] Email contains all submitted data correctly formatted
-- [ ] Phone number field is optional (can submit without it)
+When someone submits the form, you'll receive:
+- **Name** (First & Last)
+- **Email** (to reply to them)
+- **Phone** (optional)
+- **Service Type** (what they're interested in)
+- **Project Details** (their full message)
+- **Timestamp** (when they submitted)
 
 ---
 
 ## Troubleshooting
 
-**Form submits but no email received:**
-- Check Netlify Forms settings (see Step 2 above)
-- Verify email address is correct: `cian@twomeycarpentry.ie`
-- Check spam/junk folder
+**Form shows error after submission:**
+- Verify EMAIL_USER and EMAIL_PASSWORD are set in Netlify environment variables
+- Check the Gmail app password is correct (16 characters)
+- Go to Netlify **Functions** tab and check the logs
 
-**Form shows error message:**
-- Try refreshing the page
-- Clear browser cache
-- Check console for error messages (F12 → Console)
-- Contact Netlify support
+**Email not arriving:**
+- Check twomeycarpentry1@gmail.com inbox AND spam folder
+- Verify the app password was generated correctly
+- Try sending again
 
-**Want to see all submissions:**
-- Go to Netlify Dashboard → Site → Forms → contact form
-- All submissions are stored with timestamps
-- Can see and download submission data anytime
+**Need to change the recipient email:**
+- Edit `netlify/functions/contact.js` line 20: `to: 'new-email@example.com'`
+- Commit and redeploy
 
 ---
 
-## Files Created/Updated
+## Files Modified
 
-1. **index.html** - Updated form with Netlify Forms configuration
-2. **netlify.toml** - Netlify configuration file with form settings
-3. **netlify/functions/send-email.js** - Optional: email sending function
-4. **INSTAGRAM_SETUP.md** - Instagram feed integration guide
-5. **CONTACT_FORM_SETUP.md** - This file
+1. **index.html** - Updated form to submit to Netlify Function
+2. **netlify/functions/contact.js** - Function that handles email sending
+3. **netlify/functions/package.json** - Dependencies (nodemailer)
+4. **netlify.toml** - Netlify configuration
+
+---
+
+## Security Notes
+
+- Gmail credentials are stored securely in Netlify (not in code)
+- Email passwords are never exposed in frontend code
+- Form submission happens server-side, not client-side
+- No third-party services needed
 
 ---
 
 ## Next Steps
 
-1. **Push code to GitHub** (if not already done):
-   ```bash
-   git push origin main
-   ```
+1. **Generate Gmail App Password** (Step 1 above)
+2. **Add to Netlify environment variables** (Step 2 above)
+3. **Trigger a redeploy** (Step 3 above)
+4. **Test the form** on the live website
 
-2. **Configure in Netlify Dashboard** (see Step 2 above)
-
-3. **Test the form** on the live website
-
-4. **Verify emails arrive** in Cian's inbox
-
-That's it! The form is now ready to route all enquiries to Cian's email.
+That's it! The form is now fully functional.
 
 ---
 
 **Last Updated:** April 14, 2026  
 **Site:** www.twomeycarpentryandjoinery.ie  
-**Support Email:** twomeycarpentry1@gmail.com
+**Primary Email:** twomeycarpentry1@gmail.com

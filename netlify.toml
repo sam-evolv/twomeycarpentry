@@ -1,19 +1,11 @@
 [build]
   command = "echo 'Static site - no build required'"
   publish = "."
+  functions = "netlify/functions"
 
-# Form handling configuration
-[[forms]]
-  name = "contact"
-  # Email notifications
-  [[forms.notification]]
-    provider = "email"
-    recipients = ["twomeycarpentry1@gmail.com"]
-
-# Environment variables for email service
-[context.production.environment]
-  EMAIL_SERVICE = "gmail"
-  # EMAIL_USER and EMAIL_PASSWORD should be set in Netlify dashboard
+# Environment variables - these MUST be set in Netlify dashboard
+# EMAIL_USER = twomeycarpentry1@gmail.com
+# EMAIL_PASSWORD = your_gmail_app_password (generate at myaccount.google.com/apppasswords)
 
 # Redirect all form submissions
 [[redirects]]
