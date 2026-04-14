@@ -8,7 +8,7 @@
   # Email notifications
   [[forms.notification]]
     provider = "email"
-    recipients = ["cian@twomeycarpentry.ie", "twomeycarpentry1@gmail.com"]
+    recipients = ["twomeycarpentry1@gmail.com"]
 
 # Environment variables for email service
 [context.production.environment]
