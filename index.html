@@ -1038,6 +1038,7 @@
     .projects-track-wrap {
       margin: 0 calc(-1 * clamp(1.5rem, 5vw, 5rem));
       padding: 0 clamp(1.5rem, 5vw, 5rem);
+      -webkit-overflow-scrolling: touch;
       cursor: grab;
       overflow: hidden;
       position: relative;
@@ -1277,7 +1278,7 @@
       .fg input, .fg textarea, .fg select { font-size: 16px; } /* Prevents iOS zoom on focus */
 
       /* Scroll snap for project cards on touch */
-      .projects-track-wrap { scroll-snap-type: x mandatory; overflow-x: auto; }
+      .projects-track-wrap { scroll-snap-type: x proximity; overflow-x: auto; scroll-behavior: smooth; }
       .proj-card { scroll-snap-align: start; }
 
       /* Gallery items taller for impact */
@@ -2154,39 +2155,60 @@
     if (!track) return;
     const wrap = track.closest('.projects-track-wrap');
 
-    let isDown = false, startX, scrollLeft;
-
-    wrap.addEventListener('mousedown', e => {
-      isDown = true;
-      wrap.classList.add('active');
-      startX = e.pageX - wrap.offsetLeft;
-      scrollLeft = wrap.scrollLeft;
-    });
-    wrap.addEventListener('mouseleave', () => { isDown = false; wrap.classList.remove('active'); });
-    wrap.addEventListener('mouseup', () => { isDown = false; wrap.classList.remove('active'); });
-    wrap.addEventListener('mousemove', e => {
-      if (!isDown) return;
-      e.preventDefault();
-      const x = e.pageX - wrap.offsetLeft;
-      const walk = (x - startX) * 1.5;
-      wrap.scrollLeft = scrollLeft - walk;
-    });
-
-    // Touch support
-    let touchStartX, touchScrollLeft;
-    wrap.addEventListener('touchstart', e => {
-      touchStartX = e.touches[0].pageX;
-      touchScrollLeft = wrap.scrollLeft;
-    }, { passive: true });
-    wrap.addEventListener('touchmove', e => {
-      const x = e.touches[0].pageX;
-      wrap.scrollLeft = touchScrollLeft - (x - touchStartX) * 1.2;
-    }, { passive: true });
-
-    // Make wrap scrollable
+    // Make wrap scrollable, hide scrollbar
     wrap.style.overflowX = 'auto';
     wrap.style.scrollbarWidth = 'none';
     wrap.style.msOverflowStyle = 'none';
+    wrap.style.cursor = 'grab';
+
+    // ── Mouse drag with momentum ──────────────────────────────────────────
+    let isDown = false, startX, scrollLeft, velX = 0, lastX = 0, lastT = 0, rafId;
+
+    function momentum() {
+      if (Math.abs(velX) < 0.5) return;
+      wrap.scrollLeft += velX;
+      velX *= 0.92; // friction
+      rafId = requestAnimationFrame(momentum);
+    }
+
+    wrap.addEventListener('mousedown', e => {
+      isDown = true;
+      cancelAnimationFrame(rafId);
+      velX = 0;
+      startX = e.pageX - wrap.offsetLeft;
+      scrollLeft = wrap.scrollLeft;
+      lastX = e.pageX;
+      lastT = Date.now();
+      wrap.style.cursor = 'grabbing';
+      wrap.style.userSelect = 'none';
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDown) return;
+      isDown = false;
+      wrap.style.cursor = 'grab';
+      wrap.style.userSelect = '';
+      requestAnimationFrame(momentum);
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - wrap.offsetLeft;
+      const dx = x - startX;
+      wrap.scrollLeft = scrollLeft - dx;
+
+      // Track velocity
+      const now = Date.now();
+      const dt = now - lastT || 1;
+      velX = (lastX - e.pageX) / dt * 16; // px per frame @ 60fps
+      lastX = e.pageX;
+      lastT = now;
+    });
+
+    // ── Touch: let the browser handle it natively ─────────────────────────
+    // CSS scroll-snap + -webkit-overflow-scrolling handles iPhone perfectly.
+    // No JS needed — removing manual touchmove override fixes the jank.
 
     // Auto-scroll hint on load (subtle)
     setTimeout(() => {
