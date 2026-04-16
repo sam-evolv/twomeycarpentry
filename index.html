@@ -1061,8 +1061,7 @@
       flex-shrink: 0; width: clamp(300px, 35vw, 480px);
       position: relative; overflow: hidden;
       background: var(--navy-mid);
-      transform: translateZ(0);
-      -webkit-transform: translateZ(0);
+      isolation: isolate;
     }
     .proj-img {
       display: block;
@@ -1070,12 +1069,11 @@
       background-size: cover; background-position: center;
       transition: transform 0.8s var(--ease), filter 0.5s;
       filter: brightness(0.8) saturate(0.8);
-      will-change: transform;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
     }
     .proj-card:hover .proj-img {
-      transform: scale(1.04);
+      transform: scale(1.04) translateZ(0);
       filter: brightness(0.7) saturate(0.9);
     }
     .proj-info {
@@ -1283,14 +1281,12 @@
       .cform { gap: 1rem; }
       .fg input, .fg textarea, .fg select { font-size: 16px; } /* Prevents iOS zoom on focus */
 
-      /* Scroll snap for project cards on touch — native iOS momentum */
+      /* Native momentum scroll on touch — no snap to avoid rendering seams */
       .projects-track-wrap {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
-        scroll-snap-type: x mandatory;
         overscroll-behavior-x: contain;
       }
-      .proj-card { scroll-snap-align: start; }
 
       /* Gallery items taller for impact */
       .gi { height: 260px; }
@@ -1636,8 +1632,8 @@
         <div class="proj-img" style="background-image:url('images/vanity-vessel-sink.jpg')"></div>
         <span class="proj-num">04</span>
         <div class="proj-info">
-          <span class="proj-cat">Bathroom Renovation</span>
-          <span class="proj-name">Full Bathroom Renovation</span>
+          <span class="proj-cat">Bespoke Furniture</span>
+          <span class="proj-name">Custom Vanity Unit</span>
                   </div>
       </div>
 
